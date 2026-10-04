@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.jpg" width="33%" alt="Aero Tracker Logo">
+</p>
+
 # Aero Tracker — Estimador CdA para Karoo 2/3
 
 > **Túnel de viento virtual para tu Hammerhead Karoo 2/3**
