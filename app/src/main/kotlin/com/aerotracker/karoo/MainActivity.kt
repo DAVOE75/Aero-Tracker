@@ -105,84 +105,6 @@ fun AeroTrackerConfigScreen() {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // CdA Result Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = cardColor),
-                elevation = CardDefaults.cardElevation(8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("CdA Estimado", color = Color(0xFF888888), fontSize = 13.sp)
-                    Spacer(Modifier.height(8.dp))
-
-                    if (result.isValid) {
-                        Text(
-                            String.format("%.4f", result.cdA),
-                            color = accentColor,
-                            fontSize = 52.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text("m²", color = Color(0xFF666666), fontSize = 14.sp)
-                        Spacer(Modifier.height(12.dp))
-
-                        val catColor = categoryColor(result.category)
-                        Chip(
-                            label = result.category.label,
-                            description = result.category.description,
-                            color = catColor
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        // Desglose de potencias
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            PowerBreakdownItem(
-                                label = "Aero",
-                                value = "${result.powerAero.toInt()}W",
-                                color = Color(0xFF2196F3)
-                            )
-                            PowerBreakdownItem(
-                                label = "Rodadura",
-                                value = "${result.powerRolling.toInt()}W",
-                                color = Color(0xFFFF9800)
-                            )
-                            PowerBreakdownItem(
-                                label = "Gravedad",
-                                value = "${result.powerGravity.toInt()}W",
-                                color = Color(0xFFE91E63)
-                            )
-                        }
-
-                        Spacer(Modifier.height(8.dp))
-                        val wSaved = result.wattsSavedVsBaseline.toInt()
-                        val sign = if (wSaved >= 0) "−" else "+"
-                        Text(
-                            "$sign${Math.abs(wSaved)}W vs postura base (CdA 0.32)",
-                            color = if (wSaved >= 0) accentColor else Color(0xFFFF5252),
-                            fontSize = 13.sp
-                        )
-                    } else {
-                        Text(
-                            "—",
-                            color = Color(0xFF555555),
-                            fontSize = 52.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            "Velocidad insuficiente o sin potencia",
-                            color = Color(0xFF666666),
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-
             // Instrucciones y Explicación
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -263,6 +185,84 @@ fun AeroTrackerConfigScreen() {
             
             // Sliders de entrada del simulador
             Text("Parámetros de Simulación (Pruebas)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+
+            // CdA Result Card (movido abajo de Parámetros de Simulación)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = cardColor),
+                elevation = CardDefaults.cardElevation(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("CdA Estimado", color = Color(0xFF888888), fontSize = 13.sp)
+                    Spacer(Modifier.height(8.dp))
+
+                    if (result.isValid) {
+                        Text(
+                            String.format("%.4f", result.cdA),
+                            color = accentColor,
+                            fontSize = 52.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text("m²", color = Color(0xFF666666), fontSize = 14.sp)
+                        Spacer(Modifier.height(12.dp))
+
+                        val catColor = categoryColor(result.category)
+                        Chip(
+                            label = result.category.label,
+                            description = result.category.description,
+                            color = catColor
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+
+                        // Desglose de potencias
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            PowerBreakdownItem(
+                                label = "Aero",
+                                value = "${result.powerAero.toInt()}W",
+                                color = Color(0xFF2196F3)
+                            )
+                            PowerBreakdownItem(
+                                label = "Rodadura",
+                                value = "${result.powerRolling.toInt()}W",
+                                color = Color(0xFFFF9800)
+                            )
+                            PowerBreakdownItem(
+                                label = "Gravedad",
+                                value = "${result.powerGravity.toInt()}W",
+                                color = Color(0xFFE91E63)
+                            )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+                        val wSaved = result.wattsSavedVsBaseline.toInt()
+                        val sign = if (wSaved >= 0) "−" else "+"
+                        Text(
+                            "$sign${Math.abs(wSaved)}W vs postura base (CdA 0.32)",
+                            color = if (wSaved >= 0) accentColor else Color(0xFFFF5252),
+                            fontSize = 13.sp
+                        )
+                    } else {
+                        Text(
+                            "—",
+                            color = Color(0xFF555555),
+                            fontSize = 52.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            "Velocidad insuficiente o sin potencia",
+                            color = Color(0xFF666666),
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
 
             SliderCard(
                 label = "Potencia",
