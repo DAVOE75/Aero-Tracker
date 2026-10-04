@@ -15,6 +15,10 @@
 
 Aero Tracker es una extensión para el ciclocomputador Hammerhead Karoo 2 y Karoo 3 que estima tu **CdA (Coefficient of Drag Area)** en tiempo real durante el entrenamiento, sin necesidad de una sesión formal de túnel de viento.
 
+<p align="center">
+  <img src="mockup.jpg" width="50%" alt="Aero Tracker Gauge">
+</p>
+
 ### Física detrás del cálculo
 
 ```
