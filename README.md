@@ -125,7 +125,7 @@ app/src/main/kotlin/com/aerotracker/karoo/
 ## Roadmap
 
 - [ ] **v1.1**: Integración con API OpenWeatherMap (datos de viento en tiempo real)
-- [ ] **v1.2**: Pantalla Karoo personalizada con medidor de aguja tipo "túnel de viento"
+- [x] **v1.2**: Pantalla Karoo personalizada con medidor de aguja tipo "túnel de viento"
 - [ ] **v1.3**: Modo comparación de posturas (guardar sesiones para comparar)
 - [ ] **v1.4**: Exportación de datos CdA a Strava/Garmin Connect
 - [ ] **v2.0**: Calibración automática con sesión de referencia
