@@ -362,41 +362,40 @@ fun NumberInputCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(label, color = Color(0xFFAAAAAA), fontSize = 13.sp)
+            Spacer(Modifier.height(8.dp))
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
                     onClick = { onValueChange((value - 0.5f).coerceAtLeast(0f)) },
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
-                    Text("-", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("-", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
                 }
                 
                 Text(
                     String.format("%.1f %s", value, unit),
                     color = color,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.width(70.dp),
+                    fontSize = 20.sp,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
                 
                 IconButton(
                     onClick = { onValueChange((value + 0.5f).coerceAtMost(200f)) },
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
-                    Text("+", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("+", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
                 }
             }
         }
