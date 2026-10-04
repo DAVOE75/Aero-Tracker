@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Aero Tracker</string>
+    <string name="app_subtitle">Simulador de CdA — Karoo 2/3</string>
+    <string name="bike_mass">Masa Bici + Equipaje</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"Responder"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"Vídeo"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"Rechazar"</string>
@@ -7,13 +10,32 @@
     <string msgid="6107532579223922871" name="call_notification_incoming_text">"Llamada entrante"</string>
     <string msgid="8623827134497363134" name="call_notification_ongoing_text">"Llamada en curso"</string>
     <string msgid="59049573811482460" name="call_notification_screening_text">"Filtrando una llamada entrante"</string>
+    <string name="cat_aero_desc">Posición TT o cabeza baja 0.20–0.25</string>
+    <string name="cat_aero_label">Aero</string>
+    <string name="cat_efficient_desc">Drops o semi-aero 0.25–0.32</string>
+    <string name="cat_efficient_label">Eficiente</string>
+    <string name="cat_super_aero_desc">Posición TT extrema &lt; 0.20</string>
+    <string name="cat_super_aero_label">Super Aero</string>
+    <string name="cat_upright_desc">Sentado erguido 0.32–0.40</string>
+    <string name="cat_upright_label">Normal</string>
+    <string name="cat_very_upright_desc">Manos en capota > 0.40</string>
+    <string name="cat_very_upright_label">Muy erguido</string>
     <string msgid="406453423630273620" name="close_drawer">"Cerrar menú de navegación"</string>
     <string msgid="7573152094250666567" name="close_sheet">"Cerrar hoja"</string>
+    <string name="crr">Coef. Rodadura (Crr)</string>
     <string msgid="8038256446254964252" name="default_error_message">"Entrada no válida"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"Ventana emergente"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"Menú desplegable"</string>
+    <string name="estimated_cda">CdA Estimado</string>
+    <string name="gradient">Desnivel</string>
+    <string name="headwind">Viento de frente</string>
+    <string name="how_it_works_p1">Esta extensión calcula en tiempo real tu Coeficiente de Arrastre Aerodinámico (CdA). Aplica las leyes de la física tomando la potencia total que aplicas a los pedales y restando la resistencia a la rodadura y a la gravedad (desnivel).\n\nLo que sobra, es la potencia necesaria para vencer la resistencia del viento. Cuanto más bajo sea el CdA, más rápido irás con los mismos vatios.</string>
+    <string name="how_it_works_title">💡 ¿Cómo funciona Aero Tracker?</string>
+    <string name="important_config_desc">Para que los cálculos en carretera sean exactos, DEBES ajustar estos valores. La extensión utilizará estos datos automáticamente en el Karoo:\n• Masa del Ciclista: Tu peso corporal con ropa.\n• Masa Bicicleta: Peso de la bici + bidones + equipaje.\n\n• Coeficiente de Rodadura (Crr): Depende de tu cubierta y el terreno:\n   - 0.0025 a 0.0030: Pista, TT o ruta premium en asfalto perfecto.\n   - 0.0035 a 0.0040: Neumáticos de ruta normales en asfalto medio.\n   - 0.0050 a 0.0060: Asfalto muy rugoso, mojado o cubiertas lentas.\n   - 0.0060 a 0.0080+: Gravel, caminos de tierra o adoquines.</string>
+    <string name="important_config_title">⚙️ Configuración Importante (Guarda en la extensión)</string>
     <string msgid="6827826412747255547" name="in_progress">"En curso"</string>
     <string msgid="7933458017204019916" name="indeterminate">"Marcado parcialmente"</string>
+    <string name="insufficient_speed_or_power">Velocidad insuficiente o sin potencia</string>
     <string msgid="2988463736136100848" name="m3c_bottom_sheet_collapse_description">"Contrae la hoja inferior"</string>
     <string msgid="1555567894577437024" name="m3c_bottom_sheet_dismiss_description">"Cierra la hoja inferior"</string>
     <string msgid="8403354765404029791" name="m3c_bottom_sheet_drag_handle_description">"Controlador de arrastre"</string>
@@ -73,9 +95,18 @@
     <string msgid="5460405025248574620" name="m3c_tooltip_pane_description">"Descripción emergente"</string>
     <string msgid="542007171693138492" name="navigation_menu">"Menú de navegación"</string>
     <string msgid="6610465462668679431" name="not_selected">"No seleccionado"</string>
+    <string name="power">Potencia</string>
+    <string name="power_aero">Aero</string>
+    <string name="power_gravity">Gravedad</string>
+    <string name="power_rolling">Rodadura</string>
     <string msgid="5941395253238309765" name="range_end">"Fin del intervalo"</string>
     <string msgid="7097486360902471446" name="range_start">"Inicio del intervalo"</string>
+    <string name="rider_mass">Masa Ciclista</string>
+    <string name="rider_settings_title">Ajustes del Ciclista (Para el Karoo)</string>
     <string msgid="6043586758067023" name="selected">"Seleccionado"</string>
+    <string name="simulation_info_desc">Usa los controles inferiores para simular diferentes escenarios de viento, potencia y desnivel. En carretera, el Karoo tomará estos datos de tus sensores.</string>
+    <string name="simulation_params_title">Parámetros de Simulación (Pruebas)</string>
+    <string name="speed">Velocidad</string>
     <string msgid="4139871816613051306" name="state_empty">"Vacío"</string>
     <string msgid="5834637030682409883" name="state_off">"Desactivado"</string>
     <string msgid="1490883874751719580" name="state_on">"Activado"</string>
@@ -85,4 +116,5 @@
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> por cien."</string>
     <string msgid="3765533235322692011" name="tooltip_description">"descripción emergente"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"mostrar descripción emergente"</string>
+    <string name="watts_saved_vs_baseline">%1$s%2$dW vs postura base (CdA 0.32)</string>
 </resources>

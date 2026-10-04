@@ -163,7 +163,15 @@ class AeroGaugeView @JvmOverloads constructor(
             val catColor = categoryColor(category)
             categoryTextPaint.color = catColor
             categoryTextPaint.textSize = arcRect.width() * 0.09f
-            canvas.drawText(category.label, cx, cy + arcRect.height() * 0.38f, categoryTextPaint)
+            
+            // Usar el contexto para resolver el recurso de string y así soportar internacionalización
+            val categoryLabel = try {
+                context.getString(category.labelResId)
+            } catch (e: Exception) {
+                "" // Fallback de seguridad
+            }
+            
+            canvas.drawText(categoryLabel, cx, cy + arcRect.height() * 0.38f, categoryTextPaint)
 
             // Vatios ahorrados
             if (wattsSaved != 0f) {

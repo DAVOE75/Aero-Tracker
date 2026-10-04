@@ -100,6 +100,8 @@
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
     <string name="app_name">Aero Tracker</string>
+    <string name="app_subtitle">CdA Simulator — Karoo 2/3</string>
+    <string name="bike_mass">Bike + Gear Mass</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -107,17 +109,32 @@
     <string name="call_notification_incoming_text">Incoming call</string>
     <string name="call_notification_ongoing_text">Ongoing call</string>
     <string name="call_notification_screening_text">Screening an incoming call</string>
-    <string name="category_field_name">Postura Aero</string>
-    <string name="cda_field_name">CdA en vivo</string>
-    <string name="cda_smoothed_field_name">CdA suavizado</string>
+    <string name="cat_aero_desc">TT or head down 0.20–0.25</string>
+    <string name="cat_aero_label">Aero</string>
+    <string name="cat_efficient_desc">Drops or semi-aero 0.25–0.32</string>
+    <string name="cat_efficient_label">Efficient</string>
+    <string name="cat_super_aero_desc">Extreme TT position &lt; 0.20</string>
+    <string name="cat_super_aero_label">Super Aero</string>
+    <string name="cat_upright_desc">Sitting upright 0.32–0.40</string>
+    <string name="cat_upright_label">Upright</string>
+    <string name="cat_very_upright_desc">Hands on hoods > 0.40</string>
+    <string name="cat_very_upright_label">Very Upright</string>
     <string name="close_drawer">"Close navigation menu"</string>
     <string name="close_sheet">"Close sheet"</string>
+    <string name="crr">Rolling Coef. (Crr)</string>
     <string name="default_error_message">"Invalid input"</string>
     <string name="default_popup_window_title" ns1:ignore="ExtraTranslation">"Pop-Up Window"</string>
     <string name="dropdown_menu">"Dropdown menu"</string>
-    <string name="extension_name">Aero Tracker — CdA en Tiempo Real</string>
+    <string name="estimated_cda">Estimated CdA</string>
+    <string name="gradient">Gradient</string>
+    <string name="headwind">Headwind</string>
+    <string name="how_it_works_p1">This extension calculates your Aerodynamic Drag Coefficient (CdA) in real-time. It applies the laws of physics by taking the total power you apply to the pedals and subtracting rolling resistance and gravity (gradient).\n\nWhat is left is the power needed to overcome wind resistance. The lower the CdA, the faster you will go with the same watts.</string>
+    <string name="how_it_works_title">💡 How does Aero Tracker work?</string>
+    <string name="important_config_desc">For exact calculations on the road, you MUST adjust these values. The extension will automatically use this data on the Karoo:\n• Rider Mass: Your body weight with clothes.\n• Bike Mass: Bike weight + bottles + gear.\n\n• Rolling Resistance (Crr): Depends on your tires and terrain:\n   - 0.0025 to 0.0030: Track, TT or premium road on perfect tarmac.\n   - 0.0035 to 0.0040: Normal road tires on average tarmac.\n   - 0.0050 to 0.0060: Very rough tarmac, wet or slow tires.\n   - 0.0060 to 0.0080+: Gravel, dirt roads or cobbles.</string>
+    <string name="important_config_title">⚙️ Important Configuration (Saved to extension)</string>
     <string name="in_progress">In progress</string>
     <string name="indeterminate">Partially checked</string>
+    <string name="insufficient_speed_or_power">Insufficient speed or no power</string>
     <string name="m3c_bottom_sheet_collapse_description">Collapse bottom sheet</string>
     <string name="m3c_bottom_sheet_dismiss_description">Dismiss bottom sheet</string>
     <string name="m3c_bottom_sheet_drag_handle_description">Drag handle</string>
@@ -181,10 +198,18 @@
     <string name="m3c_tooltip_pane_description">Tooltip</string>
     <string name="navigation_menu">"Navigation menu"</string>
     <string name="not_selected">Not selected</string>
-    <string name="power_aero_field_name">Potencia Aero</string>
+    <string name="power">Power</string>
+    <string name="power_aero">Aero</string>
+    <string name="power_gravity">Gravity</string>
+    <string name="power_rolling">Rolling</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
+    <string name="rider_mass">Rider Mass</string>
+    <string name="rider_settings_title">Rider Settings (For Karoo)</string>
     <string name="selected">Selected</string>
+    <string name="simulation_info_desc">Use the controls below to simulate different wind, power, and gradient scenarios. On the road, the Karoo will read this data from your sensors.</string>
+    <string name="simulation_params_title">Simulation Parameters (Testing)</string>
+    <string name="speed">Speed</string>
     <string name="state_empty">Empty</string>
     <string name="state_off">Off</string>
     <string name="state_on">On</string>
@@ -194,7 +219,7 @@
     <string name="template_percent"><ns2:g id="percentage">%1$d</ns2:g> percent.</string>
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
-    <string name="watts_saved_field_name">W ahorrados</string>
+    <string name="watts_saved_vs_baseline">%1$s%2$dW vs baseline posture (CdA 0.32)</string>
     <style name="DialogWindowTheme">
         <item name="android:windowClipToOutline">false</item>
     </style>

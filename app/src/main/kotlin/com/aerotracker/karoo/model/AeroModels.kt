@@ -1,5 +1,8 @@
 package com.aerotracker.karoo.model
 
+import androidx.annotation.StringRes
+import com.aerotracker.karoo.R
+
 /**
  * Datos de entrada para el cálculo de CdA en tiempo real.
  *
@@ -46,12 +49,12 @@ data class AeroResult(
  * Categoría descriptiva del coeficiente CdA.
  * Rangos aproximados para ciclistas en bicicleta de carretera.
  */
-enum class CdaCategory(val label: String, val description: String) {
-    SUPER_AERO("Super Aero", "Posición TT extrema < 0.20"),
-    AERO("Aero", "Posición TT o cabeza baja 0.20–0.25"),
-    EFFICIENT("Eficiente", "Drops o semi-aero 0.25–0.32"),
-    UPRIGHT("Normal", "Sentado erguido 0.32–0.40"),
-    VERY_UPRIGHT("Muy erguido", "Manos en capota > 0.40");
+enum class CdaCategory(@StringRes val labelResId: Int, @StringRes val descriptionResId: Int) {
+    SUPER_AERO(R.string.cat_super_aero_label, R.string.cat_super_aero_desc),
+    AERO(R.string.cat_aero_label, R.string.cat_aero_desc),
+    EFFICIENT(R.string.cat_efficient_label, R.string.cat_efficient_desc),
+    UPRIGHT(R.string.cat_upright_label, R.string.cat_upright_desc),
+    VERY_UPRIGHT(R.string.cat_very_upright_label, R.string.cat_very_upright_desc);
 
     companion object {
         fun fromCdA(cda: Double): CdaCategory = when {

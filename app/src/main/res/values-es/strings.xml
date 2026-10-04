@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aero Tracker</string>
+    <string name="app_subtitle">Simulador de CdA — Karoo 2/3</string>
+
+    <string name="estimated_cda">CdA Estimado</string>
+    <string name="power_aero">Aero</string>
+    <string name="power_rolling">Rodadura</string>
+    <string name="power_gravity">Gravedad</string>
+    <string name="watts_saved_vs_baseline">%1$s%2$dW vs postura base (CdA 0.32)</string>
+    <string name="insufficient_speed_or_power">Velocidad insuficiente o sin potencia</string>
+
+    <string name="how_it_works_title">💡 ¿Cómo funciona Aero Tracker?</string>
+    <string name="how_it_works_p1">Esta extensión calcula en tiempo real tu Coeficiente de Arrastre Aerodinámico (CdA). Aplica las leyes de la física tomando la potencia total que aplicas a los pedales y restando la resistencia a la rodadura y a la gravedad (desnivel).\n\nLo que sobra, es la potencia necesaria para vencer la resistencia del viento. Cuanto más bajo sea el CdA, más rápido irás con los mismos vatios.</string>
+
+    <string name="important_config_title">⚙️ Configuración Importante (Guarda en la extensión)</string>
+    <string name="important_config_desc">Para que los cálculos en carretera sean exactos, DEBES ajustar estos valores. La extensión utilizará estos datos automáticamente en el Karoo:\n• Masa del Ciclista: Tu peso corporal con ropa.\n• Masa Bicicleta: Peso de la bici + bidones + equipaje.\n\n• Coeficiente de Rodadura (Crr): Depende de tu cubierta y el terreno:\n   - 0.0025 a 0.0030: Pista, TT o ruta premium en asfalto perfecto.\n   - 0.0035 a 0.0040: Neumáticos de ruta normales en asfalto medio.\n   - 0.0050 a 0.0060: Asfalto muy rugoso, mojado o cubiertas lentas.\n   - 0.0060 a 0.0080+: Gravel, caminos de tierra o adoquines.</string>
+
+    <string name="rider_settings_title">Ajustes del Ciclista (Para el Karoo)</string>
+    <string name="rider_mass">Masa Ciclista</string>
+    <string name="bike_mass">Masa Bici + Equipaje</string>
+    <string name="crr">Coef. Rodadura (Crr)</string>
+
+    <string name="simulation_params_title">Parámetros de Simulación (Pruebas)</string>
+    <string name="simulation_info_desc">Usa los controles inferiores para simular diferentes escenarios de viento, potencia y desnivel. En carretera, el Karoo tomará estos datos de tus sensores.</string>
+    <string name="power">Potencia</string>
+    <string name="speed">Velocidad</string>
+    <string name="gradient">Desnivel</string>
+    <string name="headwind">Viento de frente</string>
+
+    <string name="cat_super_aero_label">Super Aero</string>
+    <string name="cat_super_aero_desc">Posición TT extrema &lt; 0.20</string>
+    <string name="cat_aero_label">Aero</string>
+    <string name="cat_aero_desc">Posición TT o cabeza baja 0.20–0.25</string>
+    <string name="cat_efficient_label">Eficiente</string>
+    <string name="cat_efficient_desc">Drops o semi-aero 0.25–0.32</string>
+    <string name="cat_upright_label">Normal</string>
+    <string name="cat_upright_desc">Sentado erguido 0.32–0.40</string>
+    <string name="cat_very_upright_label">Muy erguido</string>
+    <string name="cat_very_upright_desc">Manos en capota &gt; 0.40</string>
+</resources>

@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,13 +83,13 @@ fun AeroTrackerConfigScreen() {
                 title = {
                     Column {
                         Text(
-                            "🌬️ Aero Tracker",
+                            stringResource(R.string.how_it_works_title),
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
                         Text(
-                            "Simulador de CdA — Karoo 2/3",
+                            stringResource(R.string.app_subtitle),
                             color = Color(0xFF888888),
                             fontSize = 12.sp
                         )
@@ -116,12 +117,10 @@ fun AeroTrackerConfigScreen() {
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("💡 ¿Cómo funciona Aero Tracker?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(stringResource(R.string.how_it_works_title), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Esta extensión calcula en tiempo real tu Coeficiente de Arrastre Aerodinámico (CdA). " +
-                        "Aplica las leyes de la física tomando la potencia total que aplicas a los pedales y restando la resistencia a la rodadura y a la gravedad (desnivel).\n\n" +
-                        "Lo que sobra, es la potencia necesaria para vencer la resistencia del viento. Cuanto más bajo sea el CdA, más rápido irás con los mismos vatios.",
+                        stringResource(R.string.how_it_works_p1),
                         color = Color(0xFFCCCCCC),
                         fontSize = 13.sp,
                         lineHeight = 18.sp
@@ -129,18 +128,10 @@ fun AeroTrackerConfigScreen() {
                     
                     Spacer(Modifier.height(16.dp))
                     
-                    Text("⚙️ Configuración Importante (Guarda en la extensión)", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text(stringResource(R.string.important_config_title), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Para que los cálculos en carretera sean exactos, DEBES ajustar estos valores. " +
-                        "La extensión utilizará estos datos automáticamente en el Karoo:\n" +
-                        "• Masa del Ciclista: Tu peso corporal con ropa.\n" +
-                        "• Masa Bicicleta: Peso de la bici + bidones + equipaje.\n\n" +
-                        "• Coeficiente de Rodadura (Crr): Depende de tu cubierta y el terreno:\n" +
-                        "   - 0.0025 a 0.0030: Pista, TT o ruta premium en asfalto perfecto.\n" +
-                        "   - 0.0035 a 0.0040: Neumáticos de ruta normales en asfalto medio.\n" +
-                        "   - 0.0050 a 0.0060: Asfalto muy rugoso, mojado o cubiertas lentas.\n" +
-                        "   - 0.0060 a 0.0080+: Gravel, caminos de tierra o adoquines.",
+                        stringResource(R.string.important_config_desc),
                         color = Color(0xFFCCCCCC),
                         fontSize = 13.sp,
                         lineHeight = 18.sp
@@ -149,10 +140,10 @@ fun AeroTrackerConfigScreen() {
             }
 
             // Datos de la Extensión (Persistentes)
-            Text("Ajustes del Ciclista (Para el Karoo)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+            Text(stringResource(R.string.rider_settings_title), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
 
             NumberInputCard(
-                label = "Masa Ciclista",
+                label = stringResource(R.string.rider_mass),
                 value = riderMass,
                 onValueChange = { 
                     riderMass = it
@@ -164,7 +155,7 @@ fun AeroTrackerConfigScreen() {
             )
 
             NumberInputCard(
-                label = "Masa Bici + Equipaje",
+                label = stringResource(R.string.bike_mass),
                 value = bikeMass,
                 onValueChange = { 
                     bikeMass = it
@@ -176,7 +167,7 @@ fun AeroTrackerConfigScreen() {
             )
 
             SliderCard(
-                label = "Coef. Rodadura (Crr)",
+                label = stringResource(R.string.crr),
                 value = crr,
                 onValueChange = { 
                     crr = it
@@ -192,7 +183,7 @@ fun AeroTrackerConfigScreen() {
             Spacer(Modifier.height(8.dp))
             
             // Sliders de entrada del simulador
-            Text("Parámetros de Simulación (Pruebas)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+            Text(stringResource(R.string.simulation_params_title), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
 
             // Nota informativa resumida
             Card(
@@ -202,7 +193,7 @@ fun AeroTrackerConfigScreen() {
                 Row(modifier = Modifier.padding(12.dp)) {
                     Text("ℹ️ ", fontSize = 14.sp)
                     Text(
-                        "Usa los controles inferiores para simular diferentes escenarios de viento, potencia y desnivel. En carretera, el Karoo tomará estos datos de tus sensores.",
+                        stringResource(R.string.simulation_info_desc),
                         color = Color(0xFF80CBC4),
                         fontSize = 12.sp,
                         lineHeight = 16.sp
@@ -220,7 +211,7 @@ fun AeroTrackerConfigScreen() {
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("CdA Estimado", color = Color(0xFF888888), fontSize = 13.sp)
+                    Text(stringResource(R.string.estimated_cda), color = Color(0xFF888888), fontSize = 13.sp)
                     Spacer(Modifier.height(8.dp))
 
                     if (result.isValid) {
@@ -235,8 +226,8 @@ fun AeroTrackerConfigScreen() {
 
                         val catColor = categoryColor(result.category)
                         Chip(
-                            label = result.category.label,
-                            description = result.category.description,
+                            label = stringResource(result.category.labelResId),
+                            description = stringResource(result.category.descriptionResId),
                             color = catColor
                         )
 
@@ -248,17 +239,17 @@ fun AeroTrackerConfigScreen() {
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             PowerBreakdownItem(
-                                label = "Aero",
+                                label = stringResource(R.string.power_aero),
                                 value = "${result.powerAero.toInt()}W",
                                 color = Color(0xFF2196F3)
                             )
                             PowerBreakdownItem(
-                                label = "Rodadura",
+                                label = stringResource(R.string.power_rolling),
                                 value = "${result.powerRolling.toInt()}W",
                                 color = Color(0xFFFF9800)
                             )
                             PowerBreakdownItem(
-                                label = "Gravedad",
+                                label = stringResource(R.string.power_gravity),
                                 value = "${result.powerGravity.toInt()}W",
                                 color = Color(0xFFE91E63)
                             )
@@ -268,7 +259,7 @@ fun AeroTrackerConfigScreen() {
                         val wSaved = result.wattsSavedVsBaseline.toInt()
                         val sign = if (wSaved >= 0) "−" else "+"
                         Text(
-                            "$sign${Math.abs(wSaved)}W vs postura base (CdA 0.32)",
+                            stringResource(R.string.watts_saved_vs_baseline, sign, Math.abs(wSaved)),
                             color = if (wSaved >= 0) accentColor else Color(0xFFFF5252),
                             fontSize = 13.sp
                         )
@@ -280,7 +271,7 @@ fun AeroTrackerConfigScreen() {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            "Velocidad insuficiente o sin potencia",
+                            stringResource(R.string.insufficient_speed_or_power),
                             color = Color(0xFF666666),
                             fontSize = 12.sp
                         )
@@ -289,7 +280,7 @@ fun AeroTrackerConfigScreen() {
             }
 
             SliderCard(
-                label = "Potencia",
+                label = stringResource(R.string.power),
                 value = power,
                 onValueChange = { power = it },
                 range = 0f..600f,
@@ -299,7 +290,7 @@ fun AeroTrackerConfigScreen() {
             )
 
             SliderCard(
-                label = "Velocidad",
+                label = stringResource(R.string.speed),
                 value = speedKph,
                 onValueChange = { speedKph = it },
                 range = 0f..70f,
@@ -309,7 +300,7 @@ fun AeroTrackerConfigScreen() {
             )
 
             SliderCard(
-                label = "Desnivel",
+                label = stringResource(R.string.gradient),
                 value = gradient,
                 onValueChange = { gradient = it },
                 range = -10f..10f,
@@ -319,7 +310,7 @@ fun AeroTrackerConfigScreen() {
             )
 
             SliderCard(
-                label = "Viento de frente",
+                label = stringResource(R.string.headwind),
                 value = windKph,
                 onValueChange = { windKph = it },
                 range = -30f..30f,
