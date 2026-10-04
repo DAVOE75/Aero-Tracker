@@ -175,8 +175,41 @@ fun AeroTrackerConfigScreen() {
                 }
             }
 
+            // Instrucciones y Explicación
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = cardColor),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("💡 ¿Cómo funciona Aero Tracker?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Esta extensión calcula en tiempo real tu Coeficiente de Arrastre Aerodinámico (CdA). " +
+                        "Aplica las leyes de la física tomando la potencia total que aplicas a los pedales y restando la resistencia a la rodadura y a la gravedad (desnivel).\n\n" +
+                        "Lo que sobra, es la potencia necesaria para vencer la resistencia del viento. Cuanto más bajo sea el CdA, más rápido irás con los mismos vatios.",
+                        color = Color(0xFFCCCCCC),
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                    
+                    Spacer(Modifier.height(16.dp))
+                    
+                    Text("⚙️ Configuración Importante", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Para que los cálculos en carretera sean exactos, ajusta los valores de masa en el simulador de abajo a la realidad:\n" +
+                        "• Masa total = Tu peso + Peso de la bicicleta + Agua y equipamiento.\n" +
+                        "• Se asume por defecto un viento en contra de 0 km/h y asfalto estándar (Crr 0.004).",
+                        color = Color(0xFFCCCCCC),
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                }
+            }
+
             // Sliders de entrada
-            Text("Parámetros de entrada", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+            Text("Parámetros de Simulación", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
 
             SliderCard(
                 label = "Potencia",
