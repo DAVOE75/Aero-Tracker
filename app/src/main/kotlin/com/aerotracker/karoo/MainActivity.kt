@@ -375,7 +375,7 @@ fun NumberInputCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = { onValueChange((value - 0.05f).coerceAtLeast(0f)) },
+                    onClick = { onValueChange((value - 0.01f).coerceAtLeast(0f)) },
                     modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
@@ -391,7 +391,7 @@ fun NumberInputCard(
                 )
                 
                 IconButton(
-                    onClick = { onValueChange((value + 0.05f).coerceAtMost(200f)) },
+                    onClick = { onValueChange((value + 0.01f).coerceAtMost(200f)) },
                     modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
