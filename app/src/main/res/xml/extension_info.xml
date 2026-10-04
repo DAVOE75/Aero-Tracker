@@ -2,7 +2,7 @@
 <ExtensionInfo
     id="aero-tracker"
     displayName="Aero Tracker"
-    icon="@android:drawable/sym_def_app_icon"
+    icon="@drawable/ic_launcher"
     scansDevices="false"
     mapLayer="false"
     fitFile="false">
