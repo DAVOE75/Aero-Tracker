@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aero Tracker</string>
+    <string name="category_field_name">Postura Aero</string>
+    <string name="cda_field_name">CdA en vivo</string>
+    <string name="cda_smoothed_field_name">CdA suavizado</string>
+    <string name="extension_name">Aero Tracker — CdA en Tiempo Real</string>
+    <string name="power_aero_field_name">Potencia Aero</string>
+    <string name="watts_saved_field_name">W ahorrados</string>
+    <style name="Theme.AeroTracker" parent="android:Theme.Material.NoActionBar"/>
+</resources>

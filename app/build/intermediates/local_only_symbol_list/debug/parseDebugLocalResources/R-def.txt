@@ -1,0 +1,13 @@
+R_DEF: Internal format may change without notice
+local
+id gauge_image
+layout widget_aero_gauge
+string app_name
+string category_field_name
+string cda_field_name
+string cda_smoothed_field_name
+string extension_name
+string power_aero_field_name
+string watts_saved_field_name
+style Theme.AeroTracker
+xml extension_info
