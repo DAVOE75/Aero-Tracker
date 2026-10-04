@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.aerotracker.karoo.app-release-4:/layout_widget_aero_gauge.xml.flat",
+        "source": "com.aerotracker.karoo.app-main-5:/layout/widget_aero_gauge.xml"
+    },
+    {
+        "merged": "com.aerotracker.karoo.app-release-4:/xml_extension_info.xml.flat",
+        "source": "com.aerotracker.karoo.app-main-5:/xml/extension_info.xml"
+    }
+]

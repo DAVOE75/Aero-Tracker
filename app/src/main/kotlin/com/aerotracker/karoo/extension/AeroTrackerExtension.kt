@@ -1,5 +1,6 @@
 package com.aerotracker.karoo.extension
 
+import android.content.Context
 import android.util.Log
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
@@ -8,11 +9,19 @@ import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.*
 import com.aerotracker.karoo.engine.CdaCalculator
 import com.aerotracker.karoo.model.AeroInput
+import com.aerotracker.karoo.model.AeroResult
 import com.aerotracker.karoo.model.UserPreferences
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+
+data class AeroState(
+    val result: AeroResult,
+    val smoothedCdA: Double
+)
 
 /**
- * Servicio principal de la extensión Aero Tracker para Karoo 2/3 (API 1.1.7).
+ * Servicio principal de la extensión Aero Tracker para Karoo 2/3.
  */
 class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
 
@@ -36,10 +45,13 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
     private var latestAltitude: Double = 0.0
 
     private var karooSystem: KarooSystemService? = null
+    
+    // Estado reactivo centralizado para todas las vistas y campos de datos
+    private val aeroStateFlow = MutableStateFlow<AeroState?>(null)
 
     // Leer preferencias dinámicamente cada vez que se calcula por si cambian en MainActivity
-    private fun getCalculationResult(): com.aerotracker.karoo.model.AeroResult {
-        val sharedPrefs = getSharedPreferences("AeroPrefs", android.content.Context.MODE_PRIVATE)
+    private fun getCalculationResult(): AeroResult {
+        val sharedPrefs = getSharedPreferences("AeroPrefs", Context.MODE_PRIVATE)
         val riderMass = sharedPrefs.getFloat("RIDER_MASS", 75f).toDouble()
         val bikeMass = sharedPrefs.getFloat("BIKE_MASS", 8f).toDouble()
         val crr = sharedPrefs.getFloat("CRR", 0.004f).toDouble()
@@ -104,6 +116,25 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
                     latestAltitude = state.dataPoint.values[DataType.Field.PRESSURE_ELEVATION] ?: latestAltitude
                 }
             }
+
+            // Bucle central de cálculo
+            extensionScope.launch {
+                while (isActive) {
+                    val result = getCalculationResult()
+                    var smoothed = Double.NaN
+
+                    if (result.isValid) {
+                        if (cdaHistory.size >= 60) cdaHistory.removeFirst()
+                        cdaHistory.addLast(result.cdA)
+                        smoothed = CdaCalculator.smoothedCdA(cdaHistory.takeLast(prefs.smoothingWindowSec))
+                    }
+
+                    // Emitir el nuevo estado globalmente
+                    aeroStateFlow.value = AeroState(result, smoothed)
+                    
+                    delay(1000L)
+                }
+            }
         }
     }
 
@@ -111,53 +142,47 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
         object : DataTypeImpl("aero-tracker", "aerotracker-cda") {
             override fun startStream(emitter: Emitter<StreamState>) {
                 val job = extensionScope.launch {
-                    while (isActive) {
-                        val result = getCalculationResult()
-                        if (result.isValid) {
-                            if (cdaHistory.size >= 60) cdaHistory.removeFirst()
-                            cdaHistory.addLast(result.cdA)
-                            
-                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.cdA))
+                    aeroStateFlow.collect { state ->
+                        if (state != null && state.result.isValid) {
+                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to state.result.cdA))
                             emitter.onNext(StreamState.Streaming(dataPoint))
                         } else {
                             emitter.onNext(StreamState.Idle)
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { job.cancel() }
             }
 
-            override fun startView(context: android.content.Context, config: ViewConfig, emitter: io.hammerhead.karooext.internal.ViewEmitter) {
+            override fun startView(context: Context, config: ViewConfig, emitter: io.hammerhead.karooext.internal.ViewEmitter) {
                 val view = com.aerotracker.karoo.ui.AeroGaugeView(context)
                 
                 val viewJob = extensionScope.launch {
-                    while (isActive) {
-                        val result = getCalculationResult()
-                        
-                        view.cdaValue = result.cdA.toFloat()
-                        view.isValid = result.isValid
-                        view.wattsSaved = result.wattsSavedVsBaseline.toFloat()
-                        view.category = result.category
-                        
-                        val width = config.viewSize.first
-                        val height = config.viewSize.second
-                        
-                        if (width > 0 && height > 0) {
-                            val bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888)
-                            val canvas = android.graphics.Canvas(bitmap)
-                            view.measure(
-                                android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.EXACTLY),
-                                android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.EXACTLY)
-                            )
-                            view.layout(0, 0, width, height)
-                            view.draw(canvas)
+                    aeroStateFlow.collect { state ->
+                        if (state != null) {
+                            view.cdaValue = state.result.cdA.toFloat()
+                            view.isValid = state.result.isValid
+                            view.wattsSaved = state.result.wattsSavedVsBaseline.toFloat()
+                            view.category = state.result.category
+                            
+                            val width = config.viewSize.first
+                            val height = config.viewSize.second
+                            
+                            if (width > 0 && height > 0) {
+                                val bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888)
+                                val canvas = android.graphics.Canvas(bitmap)
+                                view.measure(
+                                    android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.EXACTLY),
+                                    android.view.View.MeasureSpec.makeMeasureSpec(height, android.view.View.MeasureSpec.EXACTLY)
+                                )
+                                view.layout(0, 0, width, height)
+                                view.draw(canvas)
 
-                            val rv = android.widget.RemoteViews(context.packageName, com.aerotracker.karoo.R.layout.widget_aero_gauge)
-                            rv.setImageViewBitmap(com.aerotracker.karoo.R.id.gauge_image, bitmap)
-                            emitter.updateView(rv)
+                                val rv = android.widget.RemoteViews(context.packageName, com.aerotracker.karoo.R.layout.widget_aero_gauge)
+                                rv.setImageViewBitmap(com.aerotracker.karoo.R.id.gauge_image, bitmap)
+                                emitter.updateView(rv)
+                            }
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { viewJob.cancel() }
@@ -166,15 +191,13 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
         object : DataTypeImpl("aero-tracker", "aerotracker-cda-smooth") {
             override fun startStream(emitter: Emitter<StreamState>) {
                 val job = extensionScope.launch {
-                    while (isActive) {
-                        if (cdaHistory.isNotEmpty()) {
-                            val smoothedCdA = CdaCalculator.smoothedCdA(cdaHistory.takeLast(prefs.smoothingWindowSec))
-                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to smoothedCdA))
+                    aeroStateFlow.collect { state ->
+                        if (state != null && state.result.isValid && !state.smoothedCdA.isNaN()) {
+                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to state.smoothedCdA))
                             emitter.onNext(StreamState.Streaming(dataPoint))
                         } else {
                             emitter.onNext(StreamState.Idle)
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { job.cancel() }
@@ -183,15 +206,13 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
         object : DataTypeImpl("aero-tracker", "aerotracker-watts-saved") {
             override fun startStream(emitter: Emitter<StreamState>) {
                 val job = extensionScope.launch {
-                    while (isActive) {
-                        val result = getCalculationResult()
-                        if (result.isValid) {
-                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.wattsSavedVsBaseline))
+                    aeroStateFlow.collect { state ->
+                        if (state != null && state.result.isValid) {
+                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to state.result.wattsSavedVsBaseline))
                             emitter.onNext(StreamState.Streaming(dataPoint))
                         } else {
                             emitter.onNext(StreamState.Idle)
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { job.cancel() }
@@ -200,15 +221,13 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
         object : DataTypeImpl("aero-tracker", "aerotracker-power-aero") {
             override fun startStream(emitter: Emitter<StreamState>) {
                 val job = extensionScope.launch {
-                    while (isActive) {
-                        val result = getCalculationResult()
-                        if (result.isValid) {
-                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.powerAero))
+                    aeroStateFlow.collect { state ->
+                        if (state != null && state.result.isValid) {
+                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to state.result.powerAero))
                             emitter.onNext(StreamState.Streaming(dataPoint))
                         } else {
                             emitter.onNext(StreamState.Idle)
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { job.cancel() }
@@ -217,15 +236,13 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
         object : DataTypeImpl("aero-tracker", "aerotracker-category") {
             override fun startStream(emitter: Emitter<StreamState>) {
                 val job = extensionScope.launch {
-                    while (isActive) {
-                        val result = getCalculationResult()
-                        if (result.isValid) {
-                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.category.ordinal.toDouble()))
+                    aeroStateFlow.collect { state ->
+                        if (state != null && state.result.isValid) {
+                            val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to state.result.category.ordinal.toDouble()))
                             emitter.onNext(StreamState.Streaming(dataPoint))
                         } else {
                             emitter.onNext(StreamState.Idle)
                         }
-                        delay(1000L)
                     }
                 }
                 emitter.setCancellable { job.cancel() }

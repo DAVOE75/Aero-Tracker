@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionInfo
+    id="aero-tracker"
+    displayName="Aero Tracker"
+    icon="@android:drawable/sym_def_app_icon"
+    scansDevices="false"
+    mapLayer="false"
+    fitFile="false">
+
+    <DataType
+        typeId="aerotracker-cda"
+        displayName="CdA en vivo"
+        description="Coeficiente de arrastre calculado en tiempo real"
+        graphical="true"
+        unit="m²" />
+
+    <DataType
+        typeId="aerotracker-cda-smooth"
+        displayName="CdA suavizado"
+        description="CdA promediado (5s)"
+        graphical="false"
+        unit="m²" />
+
+    <DataType
+        typeId="aerotracker-watts-saved"
+        displayName="W ahorrados"
+        description="Vatios ahorrados respecto a postura base"
+        graphical="false"
+        unit="W" />
+
+    <DataType
+        typeId="aerotracker-power-aero"
+        displayName="Potencia Aero"
+        description="Potencia superando resistencia del aire"
+        graphical="false"
+        unit="W" />
+
+    <DataType
+        typeId="aerotracker-category"
+        displayName="Postura Aero"
+        description="Categoría aerodinámica de tu posición actual"
+        graphical="false" />
+
+</ExtensionInfo>
