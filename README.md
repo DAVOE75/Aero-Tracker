@@ -3,6 +3,8 @@
 > **Túnel de viento virtual para tu Hammerhead Karoo 2/3**
 > Calcula tu Coeficiente de Arrastre Aerodinámico (CdA) en tiempo real usando datos de potencia, velocidad y desnivel.
 
+*Read this in other languages: [English](README_en.md)*
+
 ---
 
 ## ¿Qué es Aero Tracker?
