@@ -132,10 +132,31 @@ app/src/main/kotlin/com/aerotracker/karoo/
 
 ---
 
-## Licencia
+## 📦 Compilación para Desarrolladores
 
-MIT License — Libre para uso personal y contribuciones.
+El proyecto utiliza Gradle y Kotlin. Requiere JDK 17 y Android SDK (Plataforma 34).
+
+```bash
+./gradlew assembleDebug # Compila el APK de prueba
+./gradlew testDebugUnitTest # Ejecuta los test matemáticos
+```
 
 ---
 
-*Inspirado por la necesidad de democratizar el análisis aerodinámico para ciclistas y triatletas.*
+## 🤝 Créditos y Agradecimientos
+
+- Construido sobre el SDK oficial [karoo-ext](https://github.com/hammerheadnav/karoo-ext) de Hammerhead (Licencia Apache 2.0).
+- Inspirado por la comunidad open-source de modding para Karoo (como la mítica extensión *Ki2* o *Climber+*).
+- Desarrollado por **David García Pascual**.
+
+📄 **Licencia y Descargo de Responsabilidad**
+
+Este proyecto de código abierto se distribuye bajo la licencia **MIT** - Copyright 2026 David García Pascual. *Descargo de responsabilidad: Esta extensión no está afiliada, respaldada, patrocinada ni soportada por Hammerhead o SRAM. Úsala bajo tu propio riesgo y, por favor, mantén siempre los ojos en la carretera y las manos en el manillar.*
+
+---
+
+## ☕ Apoya el proyecto
+
+Si esta extensión te ha resultado útil y quieres apoyar su continuo desarrollo:
+
+<a href="https://www.buymeacoffee.com/" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
