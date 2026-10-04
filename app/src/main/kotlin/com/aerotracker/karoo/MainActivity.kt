@@ -221,27 +221,25 @@ fun AeroTrackerConfigScreen() {
             // Datos de la Extensión (Persistentes)
             Text("Ajustes del Ciclista (Para el Karoo)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
 
-            SliderCard(
+            NumberInputCard(
                 label = "Masa Ciclista",
                 value = riderMass,
                 onValueChange = { 
                     riderMass = it
                     sharedPrefs.edit().putFloat("RIDER_MASS", it).apply()
                 },
-                range = 40f..120f,
                 unit = "kg",
                 color = Color(0xFFE91E63),
                 cardColor = cardColor
             )
 
-            SliderCard(
+            NumberInputCard(
                 label = "Masa Bici + Equipaje",
                 value = bikeMass,
                 onValueChange = { 
                     bikeMass = it
                     sharedPrefs.edit().putFloat("BIKE_MASS", it).apply()
                 },
-                range = 5f..25f,
                 unit = "kg",
                 color = Color(0xFFE91E63),
                 cardColor = cardColor
@@ -348,6 +346,60 @@ fun PowerBreakdownItem(label: String, value: String, color: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, color = color, fontWeight = FontWeight.Bold, fontSize = 16.sp)
         Text(label, color = Color(0xFF888888), fontSize = 11.sp)
+    }
+}
+
+@Composable
+fun NumberInputCard(
+    label: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    unit: String,
+    color: Color,
+    cardColor: Color
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = cardColor)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(label, color = Color(0xFFAAAAAA), fontSize = 13.sp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(
+                    onClick = { onValueChange((value - 0.5f).coerceAtLeast(0f)) },
+                    modifier = Modifier.size(36.dp),
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
+                ) {
+                    Text("-", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+                
+                Text(
+                    String.format("%.1f %s", value, unit),
+                    color = color,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.width(70.dp),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                
+                IconButton(
+                    onClick = { onValueChange((value + 0.5f).coerceAtMost(200f)) },
+                    modifier = Modifier.size(36.dp),
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
+                ) {
+                    Text("+", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
     }
 }
 
