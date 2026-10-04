@@ -103,10 +103,8 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
 
     override val types: List<DataTypeImpl> = listOf(
         object : DataTypeImpl("aero-tracker", "aerotracker-cda") {
-            private var job: Job? = null
-            
             override fun startStream(emitter: Emitter<StreamState>) {
-                job = extensionScope.launch {
+                val job = extensionScope.launch {
                     while (isActive) {
                         val result = getCalculationResult()
                         if (result.isValid) {
@@ -121,6 +119,7 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { job.cancel() }
             }
 
             override fun startView(context: android.content.Context, config: ViewConfig, emitter: io.hammerhead.karooext.internal.ViewEmitter) {
@@ -155,66 +154,75 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { viewJob.cancel() }
             }
         },
         object : DataTypeImpl("aero-tracker", "aerotracker-cda-smooth") {
-            private var job: Job? = null
             override fun startStream(emitter: Emitter<StreamState>) {
-                job = extensionScope.launch {
+                val job = extensionScope.launch {
                     while (isActive) {
                         if (cdaHistory.isNotEmpty()) {
                             val smoothedCdA = CdaCalculator.smoothedCdA(cdaHistory.takeLast(prefs.smoothingWindowSec))
                             val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to smoothedCdA))
                             emitter.onNext(StreamState.Streaming(dataPoint))
+                        } else {
+                            emitter.onNext(StreamState.Idle)
                         }
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { job.cancel() }
             }
         },
         object : DataTypeImpl("aero-tracker", "aerotracker-watts-saved") {
-            private var job: Job? = null
             override fun startStream(emitter: Emitter<StreamState>) {
-                job = extensionScope.launch {
+                val job = extensionScope.launch {
                     while (isActive) {
                         val result = getCalculationResult()
                         if (result.isValid) {
                             val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.wattsSavedVsBaseline))
                             emitter.onNext(StreamState.Streaming(dataPoint))
+                        } else {
+                            emitter.onNext(StreamState.Idle)
                         }
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { job.cancel() }
             }
         },
         object : DataTypeImpl("aero-tracker", "aerotracker-power-aero") {
-            private var job: Job? = null
             override fun startStream(emitter: Emitter<StreamState>) {
-                job = extensionScope.launch {
+                val job = extensionScope.launch {
                     while (isActive) {
                         val result = getCalculationResult()
                         if (result.isValid) {
                             val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.powerAero))
                             emitter.onNext(StreamState.Streaming(dataPoint))
+                        } else {
+                            emitter.onNext(StreamState.Idle)
                         }
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { job.cancel() }
             }
         },
         object : DataTypeImpl("aero-tracker", "aerotracker-category") {
-            private var job: Job? = null
             override fun startStream(emitter: Emitter<StreamState>) {
-                job = extensionScope.launch {
+                val job = extensionScope.launch {
                     while (isActive) {
                         val result = getCalculationResult()
                         if (result.isValid) {
                             val dataPoint = DataPoint(dataTypeId, mapOf(dataTypeId to result.category.ordinal.toDouble()))
                             emitter.onNext(StreamState.Streaming(dataPoint))
+                        } else {
+                            emitter.onNext(StreamState.Idle)
                         }
                         delay(1000L)
                     }
                 }
+                emitter.setCancellable { job.cancel() }
             }
         }
     )
