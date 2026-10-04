@@ -16,6 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import com.aerotracker.karoo.engine.CdaCalculator
 import com.aerotracker.karoo.model.AeroInput
 import com.aerotracker.karoo.model.CdaCategory
@@ -131,8 +135,12 @@ fun AeroTrackerConfigScreen() {
                         "Para que los cálculos en carretera sean exactos, DEBES ajustar estos valores. " +
                         "La extensión utilizará estos datos automáticamente en el Karoo:\n" +
                         "• Masa del Ciclista: Tu peso corporal con ropa.\n" +
-                        "• Masa Bicicleta: Peso de la bici + bidones + equipamiento.\n" +
-                        "• Crr: Tipo de asfalto (0.003 liso, 0.004 normal, 0.006 rugoso/mojado).",
+                        "• Masa Bicicleta: Peso de la bici + bidones + equipaje.\n\n" +
+                        "• Coeficiente de Rodadura (Crr): Depende de tu cubierta y el terreno:\n" +
+                        "   - 0.0025 a 0.0030: Pista, TT o ruta premium en asfalto perfecto.\n" +
+                        "   - 0.0035 a 0.0040: Neumáticos de ruta normales en asfalto medio.\n" +
+                        "   - 0.0050 a 0.0060: Asfalto muy rugoso, mojado o cubiertas lentas.\n" +
+                        "   - 0.0060 a 0.0080+: Gravel, caminos de tierra o adoquines.",
                         color = Color(0xFFCCCCCC),
                         fontSize = 13.sp,
                         lineHeight = 18.sp
@@ -185,6 +193,22 @@ fun AeroTrackerConfigScreen() {
             
             // Sliders de entrada del simulador
             Text("Parámetros de Simulación (Pruebas)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+
+            // Nota informativa resumida
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0D2818))
+            ) {
+                Row(modifier = Modifier.padding(12.dp)) {
+                    Text("ℹ️ ", fontSize = 14.sp)
+                    Text(
+                        "Usa los controles inferiores para simular diferentes escenarios de viento, potencia y desnivel. En carretera, el Karoo tomará estos datos de tus sensores.",
+                        color = Color(0xFF80CBC4),
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp
+                    )
+                }
+            }
 
             // CdA Result Card (movido abajo de Parámetros de Simulación)
             Card(
@@ -304,22 +328,6 @@ fun AeroTrackerConfigScreen() {
                 cardColor = cardColor
             )
 
-            // Nota informativa
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF0D2818))
-            ) {
-                Row(modifier = Modifier.padding(12.dp)) {
-                    Text("ℹ️ ", fontSize = 14.sp)
-                    Text(
-                        "Esta pantalla es el simulador. En el Karoo 2/3 los datos de potencia, velocidad y desnivel se leen automáticamente de los sensores. Añade los campos de datos de Aero Tracker a tu pantalla de actividad.",
-                        color = Color(0xFF80CBC4),
-                        fontSize = 12.sp,
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-
             Spacer(Modifier.height(32.dp))
         }
     }
@@ -358,6 +366,50 @@ fun NumberInputCard(
     color: Color,
     cardColor: Color
 ) {
+    val currentValue by rememberUpdatedState(value)
+    val currentOnValueChange by rememberUpdatedState(onValueChange)
+
+    val minusInteraction = remember { MutableInteractionSource() }
+    val isMinusPressed by minusInteraction.collectIsPressedAsState()
+
+    LaunchedEffect(isMinusPressed) {
+        if (isMinusPressed) {
+            delay(400) // Esperar 400ms antes de activar la auto-repetición
+            var steps = 0
+            while (isActive) {
+                // Aceleración: al principio de 10g, luego 100g, luego 1kg por ciclo
+                val step = when {
+                    steps > 30 -> 1.0f
+                    steps > 15 -> 0.1f
+                    else -> 0.01f
+                }
+                currentOnValueChange((currentValue - step).coerceAtLeast(0f))
+                delay(80L)
+                steps++
+            }
+        }
+    }
+
+    val plusInteraction = remember { MutableInteractionSource() }
+    val isPlusPressed by plusInteraction.collectIsPressedAsState()
+
+    LaunchedEffect(isPlusPressed) {
+        if (isPlusPressed) {
+            delay(400)
+            var steps = 0
+            while (isActive) {
+                val step = when {
+                    steps > 30 -> 1.0f
+                    steps > 15 -> 0.1f
+                    else -> 0.01f
+                }
+                currentOnValueChange((currentValue + step).coerceAtMost(200f))
+                delay(80L)
+                steps++
+            }
+        }
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = cardColor)
@@ -376,6 +428,7 @@ fun NumberInputCard(
             ) {
                 IconButton(
                     onClick = { onValueChange((value - 0.01f).coerceAtLeast(0f)) },
+                    interactionSource = minusInteraction,
                     modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
@@ -392,6 +445,7 @@ fun NumberInputCard(
                 
                 IconButton(
                     onClick = { onValueChange((value + 0.01f).coerceAtMost(200f)) },
+                    interactionSource = plusInteraction,
                     modifier = Modifier.size(48.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color(0xFF333333))
                 ) {
