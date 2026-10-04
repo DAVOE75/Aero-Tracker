@@ -42,20 +42,28 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AeroTrackerConfigScreen() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val sharedPrefs = remember { context.getSharedPreferences("AeroPrefs", android.content.Context.MODE_PRIVATE) }
+
     var power by remember { mutableStateOf(200f) }
     var speedKph by remember { mutableStateOf(35f) }
     var gradient by remember { mutableStateOf(0f) }
-    var mass by remember { mutableStateOf(83f) }
     var windKph by remember { mutableStateOf(0f) }
+    
+    // Variables persistentes reales
+    var riderMass by remember { mutableStateOf(sharedPrefs.getFloat("RIDER_MASS", 75f)) }
+    var bikeMass by remember { mutableStateOf(sharedPrefs.getFloat("BIKE_MASS", 8f)) }
+    var crr by remember { mutableStateOf(sharedPrefs.getFloat("CRR", 0.004f)) }
 
-    val result = remember(power, speedKph, gradient, mass, windKph) {
+    val result = remember(power, speedKph, gradient, riderMass, bikeMass, windKph, crr) {
         CdaCalculator.calculate(
             AeroInput(
                 powerWatts = power.toDouble(),
                 speedMs = speedKph / 3.6,
                 gradientPercent = gradient.toDouble(),
-                riderMassKg = mass.toDouble(),
-                windSpeedMs = windKph / 3.6
+                riderMassKg = (riderMass + bikeMass).toDouble(),
+                windSpeedMs = windKph / 3.6,
+                crrRolling = crr.toDouble()
             )
         )
     }
@@ -195,12 +203,14 @@ fun AeroTrackerConfigScreen() {
                     
                     Spacer(Modifier.height(16.dp))
                     
-                    Text("⚙️ Configuración Importante", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("⚙️ Configuración Importante (Guarda en la extensión)", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Para que los cálculos en carretera sean exactos, ajusta los valores de masa en el simulador de abajo a la realidad:\n" +
-                        "• Masa total = Tu peso + Peso de la bicicleta + Agua y equipamiento.\n" +
-                        "• Se asume por defecto un viento en contra de 0 km/h y asfalto estándar (Crr 0.004).",
+                        "Para que los cálculos en carretera sean exactos, DEBES ajustar estos valores. " +
+                        "La extensión utilizará estos datos automáticamente en el Karoo:\n" +
+                        "• Masa del Ciclista: Tu peso corporal con ropa.\n" +
+                        "• Masa Bicicleta: Peso de la bici + bidones + equipamiento.\n" +
+                        "• Crr: Tipo de asfalto (0.003 liso, 0.004 normal, 0.006 rugoso/mojado).",
                         color = Color(0xFFCCCCCC),
                         fontSize = 13.sp,
                         lineHeight = 18.sp
@@ -208,8 +218,53 @@ fun AeroTrackerConfigScreen() {
                 }
             }
 
-            // Sliders de entrada
-            Text("Parámetros de Simulación", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+            // Datos de la Extensión (Persistentes)
+            Text("Ajustes del Ciclista (Para el Karoo)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+
+            SliderCard(
+                label = "Masa Ciclista",
+                value = riderMass,
+                onValueChange = { 
+                    riderMass = it
+                    sharedPrefs.edit().putFloat("RIDER_MASS", it).apply()
+                },
+                range = 40f..120f,
+                unit = "kg",
+                color = Color(0xFFE91E63),
+                cardColor = cardColor
+            )
+
+            SliderCard(
+                label = "Masa Bici + Equipaje",
+                value = bikeMass,
+                onValueChange = { 
+                    bikeMass = it
+                    sharedPrefs.edit().putFloat("BIKE_MASS", it).apply()
+                },
+                range = 5f..25f,
+                unit = "kg",
+                color = Color(0xFFE91E63),
+                cardColor = cardColor
+            )
+
+            SliderCard(
+                label = "Coef. Rodadura (Crr)",
+                value = crr,
+                onValueChange = { 
+                    crr = it
+                    sharedPrefs.edit().putFloat("CRR", it).apply()
+                },
+                range = 0.002f..0.008f,
+                unit = "",
+                color = Color(0xFFFF9800),
+                cardColor = cardColor,
+                format = "%.4f"
+            )
+
+            Spacer(Modifier.height(8.dp))
+            
+            // Sliders de entrada del simulador
+            Text("Parámetros de Simulación (Pruebas)", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
 
             SliderCard(
                 label = "Potencia",
@@ -238,16 +293,6 @@ fun AeroTrackerConfigScreen() {
                 range = -10f..10f,
                 unit = "%",
                 color = Color(0xFFFF9800),
-                cardColor = cardColor
-            )
-
-            SliderCard(
-                label = "Masa total (ciclista + bici)",
-                value = mass,
-                onValueChange = { mass = it },
-                range = 50f..130f,
-                unit = "kg",
-                color = Color(0xFFE91E63),
                 cardColor = cardColor
             )
 
@@ -314,7 +359,8 @@ fun SliderCard(
     range: ClosedFloatingPointRange<Float>,
     unit: String,
     color: Color,
-    cardColor: Color
+    cardColor: Color,
+    format: String = "%.1f %s"
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -327,7 +373,7 @@ fun SliderCard(
             ) {
                 Text(label, color = Color(0xFFAAAAAA), fontSize = 13.sp)
                 Text(
-                    String.format("%.1f %s", value, unit),
+                    if (unit.isEmpty()) String.format(format, value) else String.format(format, value, unit),
                     color = color,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp

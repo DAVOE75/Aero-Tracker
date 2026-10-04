@@ -37,6 +37,28 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
 
     private var karooSystem: KarooSystemService? = null
 
+    // Leer preferencias dinámicamente cada vez que se calcula por si cambian en MainActivity
+    private fun getCalculationResult(): com.aerotracker.karoo.model.AeroResult {
+        val sharedPrefs = getSharedPreferences("AeroPrefs", android.content.Context.MODE_PRIVATE)
+        val riderMass = sharedPrefs.getFloat("RIDER_MASS", 75f).toDouble()
+        val bikeMass = sharedPrefs.getFloat("BIKE_MASS", 8f).toDouble()
+        val crr = sharedPrefs.getFloat("CRR", 0.004f).toDouble()
+        
+        val airDensity = CdaCalculator.airDensityFromAltitudeAndTemp(latestAltitude, 20.0)
+
+        val input = AeroInput(
+            powerWatts = latestPower,
+            speedMs = latestSpeed,
+            gradientPercent = latestGradient,
+            windSpeedMs = 0.0,
+            riderMassKg = riderMass + bikeMass,
+            airDensityKgM3 = airDensity,
+            crrRolling = crr
+        )
+
+        return CdaCalculator.calculate(input, prefs.baselineCdA)
+    }
+
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "AeroTrackerExtension created")
@@ -83,22 +105,6 @@ class AeroTrackerExtension : KarooExtension("aero-tracker", "1.0.0") {
                 }
             }
         }
-    }
-
-    private fun getCalculationResult(): com.aerotracker.karoo.model.AeroResult {
-        val airDensity = CdaCalculator.airDensityFromAltitudeAndTemp(latestAltitude, 20.0)
-
-        val input = AeroInput(
-            powerWatts = latestPower,
-            speedMs = latestSpeed,
-            gradientPercent = latestGradient,
-            windSpeedMs = 0.0,
-            riderMassKg = prefs.totalMassKg,
-            airDensityKgM3 = airDensity,
-            crrRolling = prefs.crrRolling
-        )
-
-        return CdaCalculator.calculate(input, prefs.baselineCdA)
     }
 
     override val types: List<DataTypeImpl> = listOf(
